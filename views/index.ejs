@@ -15,7 +15,7 @@
 <div>
     <h2>Newest Records</h2>
     <% records.forEach(function(record) { %>
-        <p><%= record.facility_name %> - <%= record.activity_date %></p>
+        <p><%= record.facility_name %> <%= moment(record.activity_date).format("MM-DD-YYYY") %></p>
     <% }) %>
 </div>
 

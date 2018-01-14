@@ -1,6 +1,7 @@
 var express = require('express');
 var request = require('request');
 var Inspections = require("../apis/acgov/inspections");
+var moment = require("moment");
   
 var router = express.Router();
 
@@ -16,7 +17,7 @@ router.get('/', function(req, res, next) {
       }, function (error, response, dataJSON) {
         if (!error) {
           var records = JSON.parse(dataJSON);
-          res.render('index', {records: records});
+          res.render('index', {records: records, moment: moment});
         }
       }
   );
