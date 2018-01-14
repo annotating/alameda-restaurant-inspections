@@ -12,6 +12,7 @@ router.get('/', function(req, res, next) {
         method: 'GET',
         qs: {
           "$limit" : Inspections.limit,
+          "$order" : Inspections.order,
           "$$app_token" : process.env.ACGOV_TOKEN
         }
       }, function (error, response, dataJSON) {
