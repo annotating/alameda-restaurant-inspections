@@ -2,12 +2,22 @@
 <html lang="en">
 <head>
     <% include partials/head %>
-    <title>Restaurant Inspections - Alameda</title>
+    <title>Alameda County Restaurant Inspections</title>
 </head>
 <body>
 
-<h1>Home Page</h1>
+<h1>Alameda County Restaurant Inspections</h1>
 
+<div>
+    <input type="text"> Search</input>
+</div>
+
+<div>
+    <h2>Newest Records</h2>
+    <% records.forEach(function(record) { %>
+        <p><%= record.facility_name %> - <%= record.activity_date %></p>
+    <% }) %>
+</div>
 
 </body>
 </html>

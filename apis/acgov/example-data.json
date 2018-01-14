@@ -1,0 +1,19 @@
+{
+    ":@computed_region_q3a8_eiwf": "1169",
+    "activity_date": "2017-08-08T00:00:00.000",
+    "facility_name": "TSURU SUSHI RESTAURANT",
+    "location_1": {
+        "type": "Point",
+        "coordinates": [
+            -122.15450227,
+            37.72398125
+        ]
+    },
+    "location_1_city": "SAN LEANDRO",
+    "location_1_location": "1427 E 14TH ST",
+    "location_1_state": "CA",
+    "location_1_zip": "94577",
+    "resource_code": "G",
+    "service": "111",
+    "violation_description": "No rodents, insects, birds, or animals"
+}
