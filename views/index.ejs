@@ -13,12 +13,48 @@
     <p>Or <a href="#">browse data...</a></p>
 </div>
 
+<div id="map"></div>
+
+
 <div>
     <h2>Newest Records</h2>
     <% records.forEach(function(record) { %>
         <p><%= record.facility_name %> <%= moment(record.activity_date).format("MM-DD-YYYY") %></p>
     <% }) %>
 </div>
+
+
+<script>
+    function initMap() {
+        var records = <%- JSON.stringify(records) %>;
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 10,
+            center: {lat: 37.6803918, lng: -122.2023815}
+        });
+
+        var infowindow = new google.maps.InfoWindow();
+
+        var marker, i;
+        for (i=0; i<records.length; i++) {  
+            marker = new google.maps.Marker({
+                position: {
+                    lat: records[i].location_1.coordinates[1], 
+                    lng: records[i].location_1.coordinates[0]
+                },
+                map: map
+            });
+
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                return function() {
+                    infowindow.setContent(records[i].facility_name);
+                    infowindow.open(map, marker);
+                }
+            })(marker, i));
+        }
+    }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= googleMapsAPIKey %>&callback=initMap"></script>
 
 </body>
 </html>
