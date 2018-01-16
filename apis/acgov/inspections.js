@@ -5,7 +5,7 @@ var Inspections = {
     url: "https://data.acgov.org/resource/y2kh-zbwg.json",
 
     query : {
-        "$select" : "facility_name, location_1, activity_date",
+        "$select" : "facility_name, resource_code, location_1, activity_date",
         "$where" : "activity_date > " + "'"+ moment().utcOffset("+0800").startOf('month').format("YYYY-MM-DD") + "'",
         "$order" : "activity_date DESC",
         "$limit" : 100,

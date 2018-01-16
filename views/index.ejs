@@ -15,16 +15,24 @@
 
 <div id="map"></div>
 
-
 <div>
     <h2>Newest Records</h2>
     <% records.forEach(function(record) { %>
-        <p><%= record.facility_name %> <%= moment(record.activity_date).format("MM-DD-YYYY") %></p>
+        <div class="record">
+            <p><%= record.facility_name %> <%= moment(record.activity_date).format("MM-DD-YYYY") %></p>
+        </div>
     <% }) %>
 </div>
 
 
 <script>
+    var markerColors = {
+        'R' : 'red-dot.png',
+        'G' : 'green-dot.png',
+        'Y' : 'yellow-dot.png',
+        'B' : 'blue-dot.png' // if no grade provided
+    } 
+
     function initMap() {
         var records = <%- JSON.stringify(records) %>;
 
@@ -37,11 +45,13 @@
 
         var marker, i;
         for (i=0; i<records.length; i++) {  
+            var icon = records[i].resource_code ? markerColors[records[i].resource_code] : markerColors['B'];
             marker = new google.maps.Marker({
                 position: {
                     lat: records[i].location_1.coordinates[1], 
                     lng: records[i].location_1.coordinates[0]
                 },
+                icon: "images/google-maps/markers/" + icon,
                 map: map
             });
 
