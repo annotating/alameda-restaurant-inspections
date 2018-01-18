@@ -2,7 +2,6 @@ require('dotenv').config();
 var express = require('express');
 var request = require('request');
 var Inspections = require("../apis/acgov/inspections");
-var moment = require("moment");
 var googleMapsClient = require('@google/maps').createClient({
   key: process.env.GOOGLE_MAPS_API_KEY
 });  
@@ -14,21 +13,40 @@ router.get('/', function(req, res, next) {
   request({
         url: Inspections.url,
         method: 'GET',
-        qs: Inspections.query
+        qs: Inspections.query.recent
       }, function (error, response, dataJSON) {
         if (!error) {
           var records = JSON.parse(dataJSON);
           records = unique(records, 'facility_name');
-
           res.render('index', {
-            records: records, 
-            moment: moment, 
-            googleMapsAPIKey: process.env.GOOGLE_MAPS_API_KEY
+            records: records
           });
         } 
       }
   );
 });
+
+// process search request
+router.get('/search', function(req, res) {
+  var name = req.query.name;
+  if (!name) {
+    res.redirect("/");
+  }
+  request({
+    url: Inspections.url,
+    method: 'GET',
+    qs: Inspections.query.name(name)
+  }, function (error, response, dataJSON) {
+    if (!error) {
+      var records = JSON.parse(dataJSON);
+      res.render('index', {
+        records: records
+      });
+    }
+  })
+});
+
+
 
 function unique(arr, property) {
   var seen = {};

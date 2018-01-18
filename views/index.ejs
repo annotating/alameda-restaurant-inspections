@@ -2,14 +2,23 @@
 <html lang="en">
 <head>
     <% include partials/head %>
-    <title>Alameda County Restaurant Inspections</title>
+    <title>Alameda Restaurant Inspections</title>
 </head>
 <body>
 
-<h1>Alameda County Restaurant Inspections</h1>
+<h1>
+    <a href="/">Alameda Restaurant Inspections</a>
+</h1>
 
 <div>
-    <input type="text"> Search</input>
+    <form action="/search" method="GET">
+        <div class="form-group">
+            <input class="form-control" name="name" type="text"></input>
+        </div>
+        <div class="form-group">
+            <button class="btn" type="submit" id="search-submit">Search</button>
+        </div>
+    </form>
     <p>Or <a href="#">browse data...</a></p>
 </div>
 
@@ -24,47 +33,13 @@
     <% }) %>
 </div>
 
-
 <script>
-    var markerColors = {
-        'R' : 'red-dot.png',
-        'G' : 'green-dot.png',
-        'Y' : 'yellow-dot.png',
-        'B' : 'blue-dot.png' // if no grade provided
-    } 
-
-    function initMap() {
+    function mapsCallback() {
         var records = <%- JSON.stringify(records) %>;
-
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 10,
-            center: {lat: 37.6803918, lng: -122.2023815}
-        });
-
-        var infowindow = new google.maps.InfoWindow();
-
-        var marker, i;
-        for (i=0; i<records.length; i++) {  
-            var icon = records[i].resource_code ? markerColors[records[i].resource_code] : markerColors['B'];
-            marker = new google.maps.Marker({
-                position: {
-                    lat: records[i].location_1.coordinates[1], 
-                    lng: records[i].location_1.coordinates[0]
-                },
-                icon: "images/google-maps/markers/" + icon,
-                map: map
-            });
-
-            google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                return function() {
-                    infowindow.setContent(records[i].facility_name);
-                    infowindow.open(map, marker);
-                }
-            })(marker, i));
-        }
+        initMap(records);
     }
 </script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= googleMapsAPIKey %>&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= googleMapsApiKey %>&callback=mapsCallback"></script>
 
 </body>
 </html>
