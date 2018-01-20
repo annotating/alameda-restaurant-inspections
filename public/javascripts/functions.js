@@ -1,11 +1,11 @@
+var records = [];
 
 /*********
 * HELPER *
 **********/
 
-
 $("document").ready(function() {
-    $("#search-box").keyup(function(){
+    $("#search-box").keyup(function() {
         var input = $("#search-box").val();
         if (input && input.length > 1) {
             $.ajax({
@@ -13,29 +13,42 @@ $("document").ready(function() {
                 url: "/search",
                 data: formToJSON("#search-form"),
                 
-                success: function(data){
+                success: function(data) {
+                    records = data;
                     if (data.length > 0) {
-                        $("#suggestion-box").html(generateSuggestionsHTML(data));
+                        $("#suggestion-box").show();
+                        $("#suggestion-box").html(generateSuggestionsHTML());
+                    } else {
+                        $("#suggestion-box").hide();
                     }
                 }
             });
+        } else {
+            $("#suggestion-box").hide();
+            records = [];
         }
     })
+
+    $("#suggestion-box").on("click", "a", function() {
+        // Your code here
+        alert(JSON.stringify(records[$(this).index()]));
+    });
 });
 
-function generateSuggestionsHTML(records) {
-    var html = "<ul>";
+function generateSuggestionsHTML() {
+    var html = "<div class='list-group'>";
     records.forEach(function(record) {
-        html += "<li>"+record.facility_name+
-                    "<span>"+
+        html += "<a href='#' class='list-group-item list-group-item-action rounded-0'>" + 
+                    record.facility_name + 
+                    " <span>" +
                         record.location_1_location + ", " +
                         record.location_1_city + ", " +
                         record.location_1_state + " " +
                         record.location_1_zip
-                    "</span>"+
-                "</li>";
+                    "</span>" + 
+                "</a>";
     });
-    html += "</ul>";
+    html += "</div>";
     return html;
 }
 

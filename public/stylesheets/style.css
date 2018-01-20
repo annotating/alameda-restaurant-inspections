@@ -1,15 +1,45 @@
-#map {
-  height: 400px;
-  width: 65%;
+#records-container {
+  padding-left: 20px;
+  height: 500px;
+  overflow : auto;
+  color: rgba(88, 88, 88, 0.75);
+  background-color: rgba(155, 155, 155, 0.075);
 }
 
+#records-container h3 {
+  padding-top: 6px;
+}
 
-ul {
-  list-style: none;
-  max-height : 100px;
+#map {
+  height: 500px;
+  width: 100%;
+}
+
+#suggestion-box {
+  border-bottom: 1px solid #ced4da;
+}
+
+#suggestion-box + p { 
+  padding: 5px;
+  margin-bottom: 20px;
+}
+
+/**********************
+* BOOTSTRAP OVERRIDES *
+***********************/
+
+.col, .col-8 {
+  padding: 0;
+}
+
+.list-group {
+  max-height : 125px;
   overflow : auto;
 }
 
+.list-group-item {
+  padding: 5px 10px;
+}
 
 form .form-control:focus{
   border-color: #007bff;
