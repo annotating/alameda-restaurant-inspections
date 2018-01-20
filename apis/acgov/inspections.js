@@ -17,6 +17,18 @@ var Inspections = {
                 "facility_name" : name,
                 "$$app_token" : process.env.ACGOV_TOKEN
             }
+        }, 
+        search : function(name) {
+            return {
+                "$where" : "LOWER(facility_name) like LOWER('%"+name+"%')",
+                "$select" : "facility_name, " +
+                            "location_1, " +
+                            "location_1_city, " +
+                            "location_1_location, " +
+                            "location_1_state, " +
+                            "location_1_zip",
+                "$$app_token" : process.env.ACGOV_TOKEN
+            }
         }
     }
 }

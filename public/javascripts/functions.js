@@ -3,6 +3,46 @@
 * HELPER *
 **********/
 
+
+$("document").ready(function() {
+    $("#search-box").keyup(function(){
+        var input = $("#search-box").val();
+        if (input && input.length > 1) {
+            $.ajax({
+                type: "post",
+                url: "/search",
+                data: formToJSON("#search-form"),
+                
+                success: function(data){
+                    if (data.length > 0) {
+                        $("#suggestion-box").html(generateSuggestionsHTML(data));
+                    }
+                }
+            });
+        }
+    })
+});
+
+function generateSuggestionsHTML(records) {
+    var html = "<ul>";
+    records.forEach(function(record) {
+        html += "<li>"+record.facility_name+
+                    "<span>"+
+                        record.location_1_location + ", " +
+                        record.location_1_city + ", " +
+                        record.location_1_state + " " +
+                        record.location_1_zip
+                    "</span>"+
+                "</li>";
+    });
+    html += "</ul>";
+    return html;
+}
+
+function formToJSON(selector) {
+    return $(selector).serializeArray().reduce(function(a, x) { a[x.name] = x.value; return a; }, {});
+}
+
 /************** 
 * GOOGLE MAPS *
 ***************/
@@ -14,7 +54,7 @@ var markerColors = {
     'B' : 'blue-dot.png' // if no grade provided
 } 
 
-function initMap(records) {
+function createMap(records) {
    var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 10,
         center: {lat: 37.6803918, lng: -122.2023815}
@@ -41,6 +81,8 @@ function initMap(records) {
             }
         })(marker, i));
     }
+
+    return map;
 }
 
 

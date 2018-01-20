@@ -5,7 +5,7 @@
 * Newest
   * Displays newest data
 * Map
-  * Detects user's location, shows status of closest restaurants
+  * Detects user's location, shows status of closest restaurants (might not do this)
     * Otherwise, general map of Alameda
 
 # Inspection Information

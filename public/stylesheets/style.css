@@ -2,3 +2,16 @@
   height: 400px;
   width: 65%;
 }
+
+
+ul {
+  list-style: none;
+  max-height : 100px;
+  overflow : auto;
+}
+
+
+form .form-control:focus{
+  border-color: #007bff;
+  box-shadow: none;
+}

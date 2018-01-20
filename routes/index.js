@@ -27,26 +27,23 @@ router.get('/', function(req, res, next) {
 });
 
 // process search request
-router.get('/search', function(req, res) {
-  var name = req.query.name;
+router.post('/search', function(req, res) {
+  var name = req.body.name;
   if (!name) {
     res.redirect("/");
   }
   request({
     url: Inspections.url,
     method: 'GET',
-    qs: Inspections.query.name(name)
+    qs: Inspections.query.search(name)
   }, function (error, response, dataJSON) {
     if (!error) {
       var records = JSON.parse(dataJSON);
-      res.render('index', {
-        records: records
-      });
+      records = unique(records, 'location_1_location');
+      res.send(records);
     }
   })
 });
-
-
 
 function unique(arr, property) {
   var seen = {};

@@ -6,37 +6,43 @@
 </head>
 <body>
 
-<h1>
-    <a href="/">Alameda Restaurant Inspections</a>
-</h1>
 
-<div>
-    <form action="/search" method="GET">
-        <div class="form-group">
-            <input class="form-control" name="name" type="text"></input>
-        </div>
-        <div class="form-group">
-            <button class="btn" type="submit" id="search-submit">Search</button>
-        </div>
-    </form>
-    <p>Or <a href="#">browse data...</a></p>
-</div>
-
-<div id="map"></div>
-
-<div>
-    <h2>Newest Records</h2>
-    <% records.forEach(function(record) { %>
-        <div class="record">
-            <p><%= record.facility_name %> <%= moment(record.activity_date).format("MM-DD-YYYY") %></p>
-        </div>
-    <% }) %>
+<div class="container">
+    <h1>
+        <a href="/">Alameda Restaurant Inspections</a>
+    </h1>
+        
+    <div>
+        <form action="/search" id="search-form" method="GET">        
+            <div class="input-group">    
+                <input class="form-control" name="name" type="text" id="search-box"></input>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-primary" type="button">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div id="suggestion-box"></div>
+        <p>Or <a href="#">browse data...</a></p>
+    </div>
+    
+    <div id="map"></div>
+    
+    <div>
+        <h2>Newest Records</h2>
+        <% records.forEach(function(record) { %>
+            <div class="record">
+                <p><%= record.facility_name %> <%= moment(record.activity_date).format("MM-DD-YYYY") %></p>
+            </div>
+        <% }) %>
+    </div>            
 </div>
 
 <script>
     function mapsCallback() {
         var records = <%- JSON.stringify(records) %>;
-        initMap(records);
+        var map = createMap(records);
     }
 </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= googleMapsApiKey %>&callback=mapsCallback"></script>
