@@ -1,5 +1,3 @@
-var records = [];
-
 /*********
 * HELPER *
 **********/
@@ -13,29 +11,35 @@ $("document").ready(function() {
                 url: "/search",
                 data: formToJSON("#search-form"),
                 
-                success: function(data) {
-                    records = data;
-                    if (data.length > 0) {
-                        $("#suggestion-box").show();
-                        $("#suggestion-box").html(generateSuggestionsHTML());
+                success: function(records) {
+                    if (records.length > 0) {
+                        showSuggestions(records);
                     } else {
-                        $("#suggestion-box").hide();
+                        $("#suggestion-box").hide(clearSuggestions);
                     }
                 }
             });
         } else {
-            $("#suggestion-box").hide();
-            records = [];
+            $("#suggestion-box").hide(clearSuggestions);
         }
     })
-
-    $("#suggestion-box").on("click", "a", function() {
-        // Your code here
-        alert(JSON.stringify(records[$(this).index()]));
-    });
 });
 
-function generateSuggestionsHTML() {
+function showSuggestions(records) {
+    $("#suggestion-box").show();
+    $("#suggestion-box").html(makeSuggestionsHTML(records));
+    $("#suggestion-box").unbind('click');
+    $("#suggestion-box").on("click", "a", function() {
+        alert(JSON.stringify(records[$(this).index()]));
+    });
+}
+
+function clearSuggestions() {
+    $("#suggestion-box").unbind('click');
+    $("#suggestion-box").html("");
+}
+
+function makeSuggestionsHTML(records) {
     var html = "<div class='list-group'>";
     records.forEach(function(record) {
         html += "<a href='#' class='list-group-item list-group-item-action rounded-0'>" + 
