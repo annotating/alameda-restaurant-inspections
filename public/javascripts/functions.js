@@ -2,7 +2,16 @@
 * HELPER *
 **********/
 
-$("document").ready(function() {
+function initListeners() {
+    // clicking outside search clears search box
+    $(document).on('click', function(e) {
+        if (isChildElement(e, 'search-box') || isChildElement(e, 'suggestion-box')) {
+            // do nothing
+        } else {
+            $('#suggestion-box').hide();
+        }
+    });
+
     $("#search-box").keyup(function() {
         var input = $("#search-box").val();
         if (input && input.length > 1) {
@@ -22,29 +31,41 @@ $("document").ready(function() {
         } else {
             $("#suggestion-box").hide(clearSuggestions);
         }
-    })
-});
+    });
+
+}
+
+function isChildElement(e, targetId) {
+    var obj = e.target;
+    while (obj) {
+        if (obj.id===targetId) {
+            return true;
+        }
+        obj = obj.parentElement;
+    }
+    return false;
+}
 
 function showSuggestions(records) {
     $("#suggestion-box").show();
     $("#suggestion-box").html(makeSuggestionsHTML(records));
-    $("#suggestion-box").unbind('click');
+    $("#suggestion-box").off('click');
     $("#suggestion-box").on("click", "a", function() {
         alert(JSON.stringify(records[$(this).index()]));
     });
 }
 
 function clearSuggestions() {
-    $("#suggestion-box").unbind('click');
+    $("#suggestion-box").off('click');
     $("#suggestion-box").html("");
 }
 
 function makeSuggestionsHTML(records) {
     var html = "<div class='list-group'>";
     records.forEach(function(record) {
-        html += "<a href='#' class='list-group-item list-group-item-action rounded-0'>" + 
+        html += "<a href='#' class='clickable list-group-item list-group-item-action rounded-0'>" + 
                     record.facility_name + 
-                    " <span>" +
+                    " <span class='location right'>" +
                         record.location_1_location + ", " +
                         record.location_1_city + ", " +
                         record.location_1_state + " " +

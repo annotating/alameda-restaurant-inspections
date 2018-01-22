@@ -1,27 +1,62 @@
-#records-container {
+.clickable {
+  cursor:pointer;
+}
+
+.location {
+  color: rgb(150, 150, 150)
+}
+
+.right {
+  float: right;
+}
+
+.date {
+  font-size: 0.7em;
+}
+
+.record {
+  color: rgba(56, 56, 56, 0.89);
+  padding: 10px 0;
+}
+
+.record:nth-child(odd) { 
+  background: rgba(85, 84, 84, 0.068); 
+}
+
+.record .location {
+  font-size: 0.85em;
+}
+
+.record-content {
   padding-left: 20px;
+  padding-right: 15px;
+}
+
+.container:nth-of-type(2) {
+  margin-top: 50px;
+}
+
+#records-container {
   height: 500px;
   overflow : auto;
-  color: rgba(88, 88, 88, 0.75);
   background-color: rgba(155, 155, 155, 0.075);
 }
 
 #records-container h3 {
+  color: rgba(56, 56, 56, 0.75);
   padding-top: 6px;
+  padding-left: 20px;
+  padding-right: 15px;
 }
 
 #map {
   height: 500px;
   width: 100%;
+  /* margin-top: 25px; */
 }
 
 #suggestion-box {
   border-bottom: 1px solid #ced4da;
-}
-
-#suggestion-box + p { 
-  padding: 5px;
-  margin-bottom: 20px;
 }
 
 /**********************
@@ -33,7 +68,7 @@
 }
 
 .list-group {
-  max-height : 125px;
+  max-height : 200px;
   overflow : auto;
 }
 
