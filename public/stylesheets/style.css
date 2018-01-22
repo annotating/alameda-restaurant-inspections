@@ -19,17 +19,22 @@
   padding: 10px 0;
 }
 
-.record:nth-child(odd) { 
-  background: rgba(85, 84, 84, 0.068); 
+.record-content {
+  padding-left: 20px;
+  padding-right: 15px;
 }
+
 
 .record .location {
   font-size: 0.85em;
 }
 
-.record-content {
-  padding-left: 20px;
-  padding-right: 15px;
+.record:nth-child(odd) { 
+  background: rgba(85, 84, 84, 0.068); 
+}
+
+.record:hover {
+  background: rgb(255, 250, 186); 
 }
 
 .container:nth-of-type(2) {
