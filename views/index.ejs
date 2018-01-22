@@ -6,7 +6,6 @@
 </head>
 <body>
 
-
 <div class="container">
     <h1><a href="/">Alameda Restaurant Inspections</a></h1>
         
@@ -22,38 +21,57 @@
             </div>
         </form>
         <div id="suggestion-box"></div>
-        <p>Or see <a href="#">newest</a>, <a href="#">browse data</a>...</p>
+        <div><em>Click</em> : displays inspection records for one restaurant</div> 
+        <div><em>Enter</em> : displays inspection records on map for all search results</div>  
+        <div>Or <a href="#">browse data</a>...</div>
     </div>
     
-    <div class="container">
-        <!-- <div class="row">
-            <div class="col">
-                <h2>Newest Records</h2>
-                <div id="recent-records">
-                    <% records.forEach(function(record) { %>
-                        <div class="record">
-                            <p><%= record.facility_name %> <%= moment(record.activity_date).format("MM-DD-YYYY") %></p>
-                        </div>
-                    <% }) %>
-                </div>
-            </div>
-        </div> -->
-        
+    <div class="container">        
         <div class="row">
+
             <div class="col-8">
                 <div id="map"></div>
             </div>
+
             <div class="col">
                 <div id="records-container">
-                    <h3>Records</h3>
+                    <h3>Newest Records</h3>
+                        <% records.forEach(function(record) { %>
+                            <div class="record">
+                                <div class="record-content clickable">
+                                    <div><%= record.facility_name %></div>
+                                    
+                                    <div class="location">
+                                        <a href="#">
+                                            <%= record.location_1_location %>
+                                            <%= record.location_1_city + ", " %>
+                                            <%= record.location_1_state + " " %>
+                                            <%= record.location_1_zip %>
+                                        </a>
+                                    </div>
+                                    <div class="date">
+                                        (Updated <%= moment(record.activity_date).format("M-DD-YY") %>)
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
                 </div>
             </div>
+
         </div>
     </div>
       
 </div>
 
 <script>
+    $("document").ready(function() {
+        initListeners();
+
+        var records = <%- JSON.stringify(records) %>;
+        $("#records-container").on("click", ".record", function() {
+            alert(JSON.stringify(records[$(this).index()-1]));
+        });
+    });
     function mapsCallback() {
         var records = <%- JSON.stringify(records) %>;
         var map = createMap(records);

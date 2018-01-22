@@ -6,7 +6,12 @@ var Inspections = {
 
     query : {
         recent : {
-            "$select" : "facility_name, resource_code, location_1, activity_date",
+            "$select" : "facility_name, resource_code, activity_date, " +
+                        "location_1, " +
+                        "location_1_city, " +
+                        "location_1_location, " +
+                        "location_1_state, " +
+                        "location_1_zip",
             "$where" : "activity_date > " + "'"+ moment().utcOffset("+0800").startOf('month').format("YYYY-MM-DD") + "'",
             "$order" : "activity_date DESC",
             "$limit" : 100,
