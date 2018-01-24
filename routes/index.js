@@ -16,6 +16,7 @@ router.get('/', function(req, res, next) {
         qs: Inspections.query.recent
       }, function (error, response, dataJSON) {
         if (!error) {
+          console.log(response);
           var records = JSON.parse(dataJSON);
           records = unique(records, 'facility_name');
           res.render('index', {

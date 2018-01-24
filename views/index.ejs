@@ -35,7 +35,7 @@
 
             <div class="col">
                 <div id="records-container">
-                    <h3>Newest Records</h3>
+                    <h3><%= moment().format('MMMM') %> Alerts</h3>
                         <% records.forEach(function(record) { %>
                             <div class="record">
                                 <div class="record-content clickable">
