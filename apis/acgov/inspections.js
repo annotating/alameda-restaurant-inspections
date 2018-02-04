@@ -13,7 +13,7 @@ var Inspections = {
                         "location_1_state, " +
                         "location_1_zip",
             "$where" :  "(resource_code='Y' OR resource_code='R') AND " +
-                        "activity_date > " + "'"+ moment().utcOffset("+0800").startOf('month').format("YYYY-MM-DD") + "'",
+                        "activity_date > " + "'"+ moment().utcOffset("+0800").startOf('month').subtract(1, 'month').format("YYYY-MM-DD") + "'",
             "$order" : "activity_date DESC",
             //"$limit" : 250,
             "$$app_token" : process.env.ACGOV_TOKEN
@@ -28,6 +28,7 @@ var Inspections = {
             return {
                 "$where" : "LOWER(facility_name) like LOWER('%"+name+"%')",
                 "$select" : "facility_name, " +
+                            "resource_code, " +
                             "location_1, " +
                             "location_1_city, " +
                             "location_1_location, " +

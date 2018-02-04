@@ -35,6 +35,13 @@ function initListeners() {
 
 }
 
+function popupRecordDetails(record) {
+    $("#popupTitle").html(
+        "<h5 class='modal-title'>"+record.facility_name+"</h5>" +
+        "<p>"+addressString(record)+"</p>"
+    );
+}
+
 function isChildElement(e, targetId) {
     var obj = e.target;
     while (obj) {
@@ -50,6 +57,7 @@ function showSuggestions(records) {
     $("#suggestion-box").show();
     $("#suggestion-box").html(makeSuggestionsHTML(records));
     $("#suggestion-box").off('click');
+
     $("#suggestion-box").on("click", "a", function() {
         alert(JSON.stringify(records[$(this).index()]));
     });
@@ -64,12 +72,9 @@ function makeSuggestionsHTML(records) {
     var html = "<div class='list-group'>";
     records.forEach(function(record) {
         html += "<a href='#' class='clickable list-group-item list-group-item-action rounded-0'>" + 
-                    record.facility_name + 
-                    " <span class='location right'>" +
-                        record.location_1_location + ", " +
-                        record.location_1_city + ", " +
-                        record.location_1_state + " " +
-                        record.location_1_zip
+                    record.facility_name + makeDotHTML(record.resource_code) +
+                    " <span class='location right'>" +  
+                        addressString(record) + 
                     "</span>" + 
                 "</a>";
     });
@@ -77,8 +82,30 @@ function makeSuggestionsHTML(records) {
     return html;
 }
 
+function safeString(val) {
+    return val ? val : '';
+}
+
+function addressString(record) {
+    var str = safeString(record.location_1_location) + ", " +
+            safeString(record.location_1_city) + ", " +
+            safeString(record.location_1_state) + " " +
+            safeString(record.location_1_zip);
+    return str;
+}
+
 function formToJSON(selector) {
     return $(selector).serializeArray().reduce(function(a, x) { a[x.name] = x.value; return a; }, {});
+}
+
+function makeDotHTML(resource_code) {
+    if (resource_code === 'G') { 
+        return "<span class='green dot'></span>"
+    } else if (resource_code === 'Y') { 
+        return "<span class='yellow dot'></span>"
+    } else if (resource_code === 'R') { 
+        return "<span class='red dot'></span>"
+    } 
 }
 
 /************** 
