@@ -69,10 +69,16 @@
 
 .dot {
   margin-left: 7px;
+  margin-bottom: 1px;
   height: 9px;
   width: 9px;
   border-radius: 50%;
   display: inline-block;
+}
+
+h5 .dot {
+  margin-left: 13px;
+  margin-bottom: 2px;
 }
 
 .yellow {
@@ -93,6 +99,10 @@
 /**********************
 * BOOTSTRAP OVERRIDES *
 ***********************/
+
+.popupHeader {
+  width: 100%;
+}
 
 .col, .col-8 {
   padding: 0;

@@ -36,9 +36,12 @@ function initListeners() {
 }
 
 function popupRecordDetails(record) {
-    $("#popupTitle").html(
-        "<h5 class='modal-title'>"+record.facility_name+"</h5>" +
-        "<p>"+addressString(record)+"</p>"
+    $("#popupHeader").html(
+        "<h5 class='modal-title'>"+
+            record.facility_name + 
+            makeDotHTML(record.resource_code) +
+        "</h5>" +
+        addressString(record)
     );
 }
 
@@ -105,7 +108,9 @@ function makeDotHTML(resource_code) {
         return "<span class='yellow dot'></span>"
     } else if (resource_code === 'R') { 
         return "<span class='red dot'></span>"
-    } 
+    } else {
+        return '';
+    }
 }
 
 /************** 

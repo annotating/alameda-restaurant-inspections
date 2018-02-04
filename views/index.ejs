@@ -5,6 +5,18 @@
     <title>Alameda Restaurant Inspections</title>
 </head>
 <body>
+    <% makeDotHTML = function(resource_code) { 
+        if (resource_code === 'G') { 
+            return "<span class='green dot'></span>"
+        } else if (resource_code === 'Y') { 
+            return "<span class='yellow dot'></span>"
+        } else if (resource_code === 'R') { 
+            return "<span class='red dot'></span>"
+        }  else {
+            return '';
+        }
+    } %>
+
 <div class="container">
     <h1><a href="/">Alameda Restaurant Inspections</a></h1>
         
@@ -61,18 +73,17 @@
         </div>
     </div>
       
-          
     <!-- Modal -->
     <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="popupLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <div id="popupTitle"></div>
+                <div id="popupHeader"></div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" id="popupContent"></div>
+            <div class="modal-body" id="popupBody"></div>
             </div>
         </div>
     </div>

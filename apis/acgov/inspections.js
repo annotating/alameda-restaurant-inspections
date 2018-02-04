@@ -28,12 +28,14 @@ var Inspections = {
             return {
                 "$where" : "LOWER(facility_name) like LOWER('%"+name+"%')",
                 "$select" : "facility_name, " +
+                            "activity_date, " +
                             "resource_code, " +
                             "location_1, " +
                             "location_1_city, " +
                             "location_1_location, " +
                             "location_1_state, " +
                             "location_1_zip",
+                "$order" : "activity_date DESC",
                 "$$app_token" : process.env.ACGOV_TOKEN
             }
         }
