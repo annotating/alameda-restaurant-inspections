@@ -2,7 +2,7 @@
 * HELPER *
 **********/
 
-function initListeners() {
+function initListeners(records) {
     // clicking outside search clears search box
     $(document).on('click', function(e) {
         if (isChildElement(e, 'search-box') || isChildElement(e, 'suggestion-box')) {
@@ -33,16 +33,43 @@ function initListeners() {
         }
     });
 
+    $(".location").on("click", "a", function() {
+        event.stopPropagation();
+        alert(JSON.stringify(records[$(this).index()]));
+    });
+
 }
 
 function popupRecordDetails(record) {
-    $("#popupHeader").html(
-        "<h5 class='modal-title'>"+
-            record.facility_name + 
-            makeDotHTML(record.resource_code) +
-        "</h5>" +
-        addressString(record)
-    );
+    if (record) {
+        $("#popupHeader").html(
+            "<h5 class='modal-title'>"+
+                record.facility_name + 
+                makeDotHTML(record.resource_code) +
+            "</h5>" +
+            addressString(record)
+        );
+
+        $.ajax({
+            type: "post",
+            url: "/search",
+            data: {
+                search : {
+                    name : record.facility_name,
+                    location : {
+                        location_1_location : record.location_1_location,
+                        location_1_city : record.location_1_city
+                    }
+                }
+            },
+            
+            success: function(records) {
+                console.log("wooo ");
+                console.log(records);
+            }
+        });
+
+    }
 }
 
 function isChildElement(e, targetId) {

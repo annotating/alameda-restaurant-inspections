@@ -23,7 +23,7 @@
     <div>
         <form action="/search" id="search-form" method="GET">        
             <div class="input-group">    
-                <input class="form-control rounded-0" name="name" type="text" id="search-box" placeholder="Search Restaurant"></input>
+                <input class="form-control rounded-0" name="search[name]" type="text" id="search-box" placeholder="Search Restaurant"></input>
                 <div class="input-group-append">
                     <button class="btn btn-outline-primary rounded-0" type="button">
                         <i class="fa fa-search"></i>
@@ -91,9 +91,9 @@
 
 <script>
     $("document").ready(function() {
-        initListeners();
-
         var records = <%- JSON.stringify(records) %>;
+        initListeners(records);
+
         $("#records-container").on("click", ".record", function() {
             popupRecordDetails(records[$(this).index()-1]);
         });

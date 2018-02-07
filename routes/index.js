@@ -28,18 +28,23 @@ router.get('/', function(req, res, next) {
 
 // process search request
 router.post('/search', function(req, res) {
-  var name = req.body.name;
-  if (!name) {
+  var search = req.body.search;
+  if (!search) {
     res.redirect("/");
   }
+
   request({
     url: Inspections.url,
     method: 'GET',
-    qs: Inspections.query.search(name)
+    qs: Inspections.query.search(search)
   }, function (error, response, dataJSON) {
     if (!error) {
       var records = JSON.parse(dataJSON);
-      records = unique(records, 'location_1_location');
+      if (search.location) {
+        // no filter
+      } else {
+        records = unique(records, 'location_1_location');
+      }
       res.send(records);
     }
   })

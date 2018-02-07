@@ -18,28 +18,35 @@ var Inspections = {
             //"$limit" : 250,
             "$$app_token" : process.env.ACGOV_TOKEN
         },
-        name : function(name) {
-            return {
-                "facility_name" : name,
-                "$$app_token" : process.env.ACGOV_TOKEN
-            }
-        }, 
-        search : function(name) {
-            return {
-                "$where" : "LOWER(facility_name) like LOWER('%"+name+"%')",
-                "$select" : "facility_name, " +
-                            "activity_date, " +
-                            "resource_code, " +
-                            "location_1, " +
-                            "location_1_city, " +
-                            "location_1_location, " +
-                            "location_1_state, " +
-                            "location_1_zip",
-                "$order" : "activity_date DESC",
-                "$$app_token" : process.env.ACGOV_TOKEN
+        search : function(obj) {
+            if (obj.location) {
+                return {
+                    "$select" : "facility_name, activity_date, " +
+                               "resource_code, service, violation_description",
+                    "$where" : "LOWER(facility_name)=LOWER('" + obj.name + "') AND " +
+                                "location_1_location='" + obj.location.location_1_location + "' AND " +
+                                "location_1_city='" + obj.location.location_1_city + "'",
+                    "$order" : "activity_date DESC",
+                    "$$app_token" : process.env.ACGOV_TOKEN
+                }
+            } else {
+                return {
+                    "$where" : "LOWER(facility_name) like LOWER('%"+obj.name+"%')",
+                    "$select" : "facility_name, " +
+                                "activity_date, " +
+                                "resource_code, " +
+                                "location_1, " +
+                                "location_1_city, " +
+                                "location_1_location, " +
+                                "location_1_state, " +
+                                "location_1_zip",
+                    "$order" : "activity_date DESC",
+                    "$$app_token" : process.env.ACGOV_TOKEN
+                }
             }
         }
     }
+
 }
 
 module.exports = Inspections;
