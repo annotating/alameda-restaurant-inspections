@@ -5,7 +5,9 @@
 function initListeners(records) {
     // clicking outside search clears search box
     $(document).on('click', function(e) {
-        if (isChildElement(e, 'search-box') || isChildElement(e, 'suggestion-box')) {
+        if (isChildElement(e, 'search-box') || 
+                isChildElement(e, 'suggestion-box') || 
+                    isChildElement(e, 'popup')) {
             // do nothing
         } else {
             $('#suggestion-box').hide();
@@ -19,8 +21,7 @@ function initListeners(records) {
                 type: "post",
                 url: "/search",
                 data: formToJSON("#search-form"),
-                
-                success: function(records) {
+               success: function(records) {
                     if (records.length > 0) {
                         showSuggestions(records);
                     } else {
@@ -42,19 +43,11 @@ function initListeners(records) {
 
 function popupRecordDetails(record) {
     if (record) {
-        $("#popupHeader").html(
-            "<h5 class='modal-title'>"+
-                record.facility_name + 
-                makeDotHTML(record.resource_code) +
-            "</h5>" +
-            addressString(record)
-        );
-
         $.ajax({
             type: "post",
             url: "/search",
             data: {
-                search : {
+                q : {
                     name : record.facility_name,
                     location : {
                         location_1_location : record.location_1_location,
@@ -63,9 +56,18 @@ function popupRecordDetails(record) {
                 }
             },
             
-            success: function(records) {
-                console.log("wooo ");
-                console.log(records);
+            success: function(results) {
+                if (results.length > 0 ) {
+                    $("#popupHeader").html(
+                        "<h5 class='modal-title'>"+
+                            record.facility_name + 
+                            makeDotHTML(record.resource_code) +
+                        "</h5>" +
+                        addressString(record)
+                    );
+                    $("#popupTableRows").html(makeRecordDetailsHTML(results));
+                    $('#popup').modal('show');
+                }
             }
         });
 
@@ -89,7 +91,7 @@ function showSuggestions(records) {
     $("#suggestion-box").off('click');
 
     $("#suggestion-box").on("click", "a", function() {
-        alert(JSON.stringify(records[$(this).index()]));
+        popupRecordDetails(records[$(this).index()]);
     });
 }
 
@@ -110,6 +112,26 @@ function makeSuggestionsHTML(records) {
     });
     html += "</div>";
     return html;
+}
+
+function makeRecordDetailsHTML(results) {
+    var str = "";
+    results.forEach(function(res) {
+        var date = formatDate(res.activity_date);
+        str += 
+        "<tr>" +
+            "<td>" + date + "</td>" +
+            "<td>" + makeDotHTML(res.resource_code) + "</td>" +
+            "<td>" + res.violation_description + "</td>" +
+        "</tr>" 
+    });
+    return str;
+}
+
+function formatDate(str) {
+    var yyyymmdd = str.split('T')[0];
+    yyyymmdd = yyyymmdd.split('-');
+    return yyyymmdd[1] + '-' + yyyymmdd[2] + '-' + yyyymmdd[0];
 }
 
 function safeString(val) {
@@ -173,8 +195,17 @@ function createMap(records) {
 
         google.maps.event.addListener(marker, 'click', (function(marker, i) {
             return function() {
-                infowindow.setContent(records[i].facility_name);
+                infowindow.setContent(
+                    '<strong>'+records[i].facility_name+'</strong>'+
+                    '<br>' +
+                    addressString(records[i]) + 
+                    '<hr>' +
+                    "<a class='clickable' id='mapTrigger')>View Inspection Records</a>"
+                );
                 infowindow.open(map, marker);
+                document.getElementById('mapTrigger').addEventListener('click', function() {
+                    popupRecordDetails(records[i])
+                })
             }
         })(marker, i));
     }
