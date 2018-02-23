@@ -33,12 +33,6 @@ function initListeners(records) {
             $("#suggestion-box").hide(clearSuggestions);
         }
     });
-
-    $(".location").on("click", "a", function() {
-        event.stopPropagation();
-        alert(JSON.stringify(records[$(this).index()]));
-    });
-
 }
 
 function popupRecordDetails(record) {
@@ -173,35 +167,55 @@ var markerColors = {
     'B' : 'blue-dot.png' // if no grade provided
 } 
 
-function createMap(records) {
-   var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 10,
-        center: {lat: 37.6803918, lng: -122.2023815}
+function infoWindowContent(record) {
+    var str = 
+            '<strong>'+record.facility_name+'</strong>'+ makeDotHTML(record.resource_code) +
+            '<br>' +
+            addressString(record) + 
+            '<hr>' +
+            "<a class='clickable' id='mapTrigger'>View Inspection Records</a>"
+    return str;
+}
+
+function makeMarker(map, record) {
+    var icon = record.resource_code ? markerColors[record.resource_code] : markerColors['B'];
+    var marker = new google.maps.Marker({
+        position: {
+            lat: record.location_1.coordinates[1], 
+            lng: record.location_1.coordinates[0]
+        },
+        icon: "images/google-maps/markers/" + icon,
+        map: map
     });
+    return marker;
+}
+
+function panToDefaultPosition(map) {
+    map.panTo({lat: 37.6903918, lng: -122.0923815});
+    map.setZoom(10);
+}
+
+function createMap(records, markers) {
+   var map = new google.maps.Map(document.getElementById('map'), {
+        zoomControl: true,
+        mapTypeControl: false,
+        scaleControl: false,
+        streetViewControl: true,
+        rotateControl: false,
+        fullscreenControl: false
+   });
+    panToDefaultPosition(map);
 
     var infowindow = new google.maps.InfoWindow();
 
     var marker, i;
     for (i=0; i<records.length; i++) {  
-        var icon = records[i].resource_code ? markerColors[records[i].resource_code] : markerColors['B'];
-        marker = new google.maps.Marker({
-            position: {
-                lat: records[i].location_1.coordinates[1], 
-                lng: records[i].location_1.coordinates[0]
-            },
-            icon: "images/google-maps/markers/" + icon,
-            map: map
-        });
+        marker = makeMarker(map, records[i]);
+        markers.push(marker);
 
         google.maps.event.addListener(marker, 'click', (function(marker, i) {
             return function() {
-                infowindow.setContent(
-                    '<strong>'+records[i].facility_name+'</strong>'+
-                    '<br>' +
-                    addressString(records[i]) + 
-                    '<hr>' +
-                    "<a class='clickable' id='mapTrigger')>View Inspection Records</a>"
-                );
+                infowindow.setContent(infoWindowContent(records[i]));
                 infowindow.open(map, marker);
                 document.getElementById('mapTrigger').addEventListener('click', function() {
                     popupRecordDetails(records[i])
@@ -210,8 +224,38 @@ function createMap(records) {
         })(marker, i));
     }
 
+    var centerControlDiv = document.createElement('div');
+    var centerControl = new CenterControl(centerControlDiv, map);
+
+    centerControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(centerControlDiv);
+  
     return map;
 }
 
+function CenterControl(controlDiv, map) {
+    // Set CSS for the control border.
+    var controlUI = document.createElement('div');
+
+    var icon = document.createElement('i');
+    icon.className ="fas fa-crosshairs";
+    controlUI.appendChild(icon);
+
+    controlUI.style.padding = '6px';
+    controlUI.style.color = '#4d4d4d';
+    controlUI.style.backgroundColor = '#fff';
+    controlUI.style.border = '2px solid #fff';
+    controlUI.style.borderRadius = '1px';
+    controlUI.style.boxShadow = '0 1px 1px rgba(0,0,0,.1)';
+    controlUI.style.cursor = 'pointer';
+    controlUI.style.marginRight = '10px';
+    controlUI.style.textAlign = 'center';
+    controlUI.title = 'Click to re-center the map';
+    controlDiv.appendChild(controlUI);
+
+    controlUI.addEventListener('click', function() {
+        panToDefaultPosition(map);
+    });
+  }
 
 

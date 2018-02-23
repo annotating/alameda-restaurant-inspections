@@ -102,17 +102,41 @@
 </div>
 
 <script>
+    var records = <%- JSON.stringify(records) %>;
+        
     $("document").ready(function() {
-        var records = <%- JSON.stringify(records) %>;
         initListeners(records);
 
         $("#records-container").on("click", ".record", function() {
             popupRecordDetails(records[$(this).index()-1]);
         });
+
+        $(".location").on("click", "a", function() {
+            var index = $(this).closest(".record").index()-1;
+            var record = records[index];
+            if (record) {
+                var lat = record.location_1.coordinates[1];
+                var lng = record.location_1.coordinates[0];
+                if (map) {
+                    map.panTo({lat: lat, lng})
+                    map.setZoom(15);
+                    google.maps.event.trigger(markers[index], 'click');
+                } else {
+                    panToDefaultPosition(map);
+                }
+            } else {
+                panToDefaultPosition(map);
+            }
+            event.stopPropagation();
+        });
     });
+
+    var map;
+    var markers = [];
+    
     function mapsCallback() {
-        var records = <%- JSON.stringify(records) %>;
-        var map = createMap(records);
+        var infoWindow = new google.maps.InfoWindow();
+        map = createMap(records, markers);
     }
 </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= googleMapsApiKey %>&callback=mapsCallback"></script>

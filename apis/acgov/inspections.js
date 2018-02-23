@@ -12,10 +12,11 @@ var Inspections = {
                         "location_1_location, " +
                         "location_1_state, " +
                         "location_1_zip",
-            "$where" :  "(resource_code='Y' OR resource_code='R') AND " +
-                        "activity_date > " + "'"+ moment().utcOffset("+0800").startOf('month').subtract(1, 'month').format("YYYY-MM-DD") + "'",
+            // "$where" :  "(resource_code='Y' OR resource_code='R') AND " +
+            //             "activity_date > " + "'"+ moment().utcOffset("+0800").startOf('month').format("YYYY-MM-DD") + "'",
+            "$where" :  "activity_date > " + "'"+ moment().utcOffset("+0800").startOf('month').format("YYYY-MM-DD") + "'",
             "$order" : "activity_date DESC",
-            //"$limit" : 250,
+            "$limit" : 300,
             "$$app_token" : process.env.ACGOV_TOKEN
         },
         search : function(obj) {
